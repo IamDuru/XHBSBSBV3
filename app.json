@@ -51,7 +51,7 @@
         "value": "https://files.catbox.moe/t5gy4y.jpg",
         "required": true
       },
-        "UPSTREAM_REPO": {
+      "UPSTREAM_REPO": {
         "description": "If you dont know this, Leave as it is",
         "value": "https://github.com/IamDuru/XHBSBSBV3",
         "required": true
