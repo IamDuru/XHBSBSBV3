@@ -50,6 +50,16 @@
         "description": "Bot Start image link",
         "value": "https://files.catbox.moe/t5gy4y.jpg",
         "required": true
+      },
+        "UPSTREAM_REPO": {
+        "description": "If you dont know this, Leave as it is",
+        "value": "https://github.com/IamDuru/XHBSBSBV3",
+        "required": true
+      },
+      "UPSTREAM_BRANCH": {
+        "description": "Upstream Repo's Branch Name",
+        "value": "main",
+        "required": true
       }
     },
     "buildpacks": [
