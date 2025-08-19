@@ -1,20 +1,28 @@
-FROM nikolaik/python-nodejs:python3.10-nodejs20-bookworm
-# Point apt to the archived buster repositories
-RUN sed -i \
-  -e 's|deb.debian.org|archive.debian.org|g' \
-  -e 's|security.debian.org|archive.debian.org/|g' \
-  /etc/apt/sources.list
+# Use an official Node.js image based on a supported OS
+FROM node:19-bullseye
 
-# Now install packages
-RUN apt-get update \
- && apt-get install -y --no-install-recommends ffmpeg aria2 \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+# Install Python, pip, ffmpeg, and aria2
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3 \
+        python3-pip \
+        ffmpeg \
+        aria2 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    # Optional: Create a symlink if your scripts use `python` and `pip`
+    ln -s /usr/bin/python3 /usr/bin/python && \
+    ln -s /usr/bin/pip3 /usr/bin/pip
+
+# Install Yarn globally via npm (Node.js image usually includes npm)
+# The base image might already have yarn, but this ensures it's present.
+RUN npm install -g yarn
 
 COPY . /app/
 WORKDIR /app/
 
-RUN python -m pip install --no-cache-dir --upgrade pip && \
-    pip3 install --no-cache-dir --upgrade -r requirements.txt
+# Upgrade pip and install Python dependencies
+RUN pip3 install --no-cache-dir --upgrade pip
+RUN pip3 install --no-cache-dir --upgrade --requirement requirements.txt
 
-CMD ["python3", "-m", "DvisMusic"]
+CMD python3 -m DvisMusic
