@@ -84,7 +84,7 @@ BOT_TOKEN = getenv("BOT_TOKEN", None)
 STRING_SESSION = getenv("STRING_SESSION", None)
 MONGO_DB_URL = getenv("MONGO_DB_URL", None)
 OWNER_ID = int(getenv("OWNER_ID", "5738579437"))
-LOG_GROUP_ID = int(getenv("LOG_GROUP_ID",0))
+LOGGER_ID = int(getenv("LOGGER_ID",0))
 START_IMAGE_URL = getenv("START_IMAGE_URL", None)
 
 
@@ -191,9 +191,9 @@ async def main():
     except Exception as e:
         LOGGER.info(f"🚫 Bot Error: {e}")
         sys.exit()
-    if LOG_GROUP_ID != 0:
+    if LOGGER_ID != 0:
         try:
-            await bot.send_message(LOG_GROUP_ID, "**🤖 Bot Started.**")
+            await bot.send_message(LOGGER_ID, "**🤖 Bot Started.**")
         except Exception:
             pass
     LOGGER.info("✅ Bot Started.")
@@ -207,9 +207,9 @@ async def main():
         await app.join_chat("ai_image_junction")
     except Exception:
         pass
-    if LOG_GROUP_ID != 0:
+    if LOGGER_ID != 0:
         try:
-            await app.send_message(LOG_GROUP_ID, "**🦋 Assistant Started.**")
+            await app.send_message(LOGGER_ID, "**🦋 Assistant Started.**")
         except Exception:
             pass
     LOGGER.info("✅ Assistant Started.")
@@ -881,8 +881,8 @@ async def clear_queue(chat_id):
 async def stream_logger(
     chat_id, user, title, duration, stream_type, thumbnail, position=None
 ):
-    if LOG_GROUP_ID != 0:
-        if chat_id != LOG_GROUP_ID:
+    if LOGGER_ID != 0:
+        if chat_id != LOGGER_ID:
             chat = await bot.get_chat(chat_id)
             chat_name = chat.title
             if chat.username:
@@ -919,7 +919,7 @@ async def stream_logger(
 ❍ ᴘᴏᴡᴇʀᴇᴅ ʙʏ➛ @net_pro_max
                 """
             try:
-                await bot.send_photo(LOG_GROUP_ID, photo=thumbnail, caption=caption)
+                await bot.send_photo(LOGGER_ID, photo=thumbnail, caption=caption)
             except Exception:
                 pass
 
