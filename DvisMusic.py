@@ -728,148 +728,163 @@ async def stream_audio_or_video(client, message):
     replied = message.reply_to_message
     audio = (replied.audio or replied.voice) if replied else None
     video = (replied.video or replied.document) if replied else None
-        stickers = ["🌹", "🌺", "🎉", "🎃", "💥", "🦋", "🕊️", "❤️", "💖", "💝", "💗", "💓", "💘", "💞"]    
-        aux = await message.reply_text(random.choice(stickers))
-        if audio:
-            title = "Unsupported Title"
-            duration = "Unknown"
-            try:
-                stream_file = await replied.download()
-            except Exception:
-                return
-            result_x = None
-            stream_type = "Audio"
-    
-        elif video:
-            title = "Unsupported Title"
-            duration = "Unknown"
-            try:
-                stream_file = await replied.download()
-            except Exception:
-                return
-            result_x = None
-            stream_type = "Video"
-    
-        else:
-            if len(message.command) < 2:
-                buttons = InlineKeyboardMarkup(
-                    [
-                        [
-                    InlineKeyboardButton(
-                        text="❖ ᴛᴧᴘ тᴏ sᴇᴇ ᴍᴧɪᴄ ❖",
-                        url=f"https://t.me/{bot.me.username}?startgroup=true",
-                    )
-                        ],
-                        [
-                InlineKeyboardButton("˹ ᴜᴘᴅᴧᴛᴇ ˼", url="https://t.me/net_pro_max"),
-                InlineKeyboardButton("˹ sᴜᴘᴘᴏꝛᴛ  ˼", url="https://t.me/+ifTJa6EmP4A1MTA9")
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="〆 ᴄʟᴏsᴇ 〆",
-                                callback_data="force_close",
-                            )
-                        ],
-                    ]
-                )
-                return await aux.edit_text(
-                    "**🥀 𝐆ɪᴠᴇ 𝐌ᴇ  𝐒ᴏᴍᴇ 𝐐ᴜᴇʀʏ To\n𝐏ʟᴀʏ 𝐀ᴜᴅɪᴏ 𝐕ɪᴅᴇᴏ❗...\n\nℹ️ 𝐄xᴀᴍᴘʟᴇs:\n≽ 𝐀ᴜᴅɪᴏ: `/play siya ram`\n≽ 𝐕ɪᴅᴇᴏ: `/vplay siya ram`**",
-                    reply_markup=buttons,
-                )
-            query = message.text.split(None, 1)[1]
-            if "https://" in query:
-                base = r"(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)?(?:shorts\/|live\/)?(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*$"
-                resu = re.findall(base, query)
-                vidid = resu[0] if resu[0] else None
-            else:
-                vidid = None
-            url = f"https://www.youtube.com/watch?v={vidid}" if vidid else None
-            search_query = url if url else query
-            results = VideosSearch(search_query, limit=1)
-            for result in (await results.next())["result"]:
-                vid_id = vidid if vidid else result["id"]
-                vid_url = url if url else result["link"]
-                try:
-                    title = "[" + (result["title"][:18]) + "]" + f"({vid_url})"
-                    title_x = result["title"]
-                except Exception:
-                    title = "Unsupported Title"
-                    title_x = title
-                try:
-                    durationx = result.get("duration")
-                    if not durationx:
-                        duration = "Live Stream"
-                        duration_x = "Live"
-                    elif len(durationx) == 4 or len(durationx) == 7:
-                        duration = f"0{durationx} Mins"
-                        duration_x = f"0{durationx}"
-                    else:
-                        duration = f"{durationx} Mins"
-                        duration_x = f"{duration}"
-                except Exception:
-                    duration = "Unknown"
-                    duration_x = "Unknown Mins"
-                try:
-                    views = result["viewCount"]["short"]
-                except Exception:
-                    views = "Unknown Views"
-                try:
-                    channel = result["channel"]["name"]
-                except Exception:
-                    channel = "Unknown Channel"
-            stream_link = url if url else result["link"]
-            stream_file = await get_youtube_stream(stream_link)
-            result_x = {
-                "title": title_x,
-                "id": vid_id,
-                "link": vid_url,
-                "duration": duration_x,
-                "views": views,
-                "channel": channel,
-            }
-            stream_type = "Audio" if str(message.command[0][0]) != "v" else "Video"
-    
+    stickers = [
+        "🌹",
+        "🌺",
+        "🎉",
+        "🎃",
+        "💥",
+        "🦋",
+        "🕊️",
+        "❤️",
+        "💖",
+        "💝",
+        "💗",
+        "💓",
+        "💘",
+        "💞",
+    ]
+    aux = await message.reply_text(random.choice(stickers))
+    if audio:
+        title = "Unsupported Title"
+        duration = "Unknown"
         try:
-            requested_by = user.mention
+            stream_file = await replied.download()
         except Exception:
-            if user.username:
-                requested_by = "[" + user.title + "](https://t.me/" + user.username + ")"
-            else:
-                requested_by = user.title
-        buttons = InlineKeyboardMarkup(
+            return
+        result_x = None
+        stream_type = "Audio"
+
+    elif video:
+        title = "Unsupported Title"
+        duration = "Unknown"
+        try:
+            stream_file = await replied.download()
+        except Exception:
+            return
+        result_x = None
+        stream_type = "Video"
+
+    else:
+        if len(message.command) < 2:
+            buttons = InlineKeyboardMarkup(
+                [
+                    [
+                InlineKeyboardButton(
+                    text="❖ ᴛᴧᴘ тᴏ sᴇᴇ ᴍᴧɪᴄ ❖",
+                    url=f"https://t.me/{bot.me.username}?startgroup=true",
+                )
+                    ],
+                    [
+            InlineKeyboardButton("˹ ᴜᴘᴅᴧᴛᴇ ˼", url="https://t.me/net_pro_max"),
+            InlineKeyboardButton("˹ sᴜᴘᴘᴏꝛᴛ  ˼", url="https://t.me/+ifTJa6EmP4A1MTA9")
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            text="〆 ᴄʟᴏsᴇ 〆",
+                            callback_data="force_close",
+                        )
+                    ],
+                ]
+            )
+            return await aux.edit_text(
+                "**🥀 𝐆ɪᴠᴇ 𝐌ᴇ  𝐒ᴏᴍᴇ 𝐐ᴜᴇʀʏ To\n𝐏ʟᴀʏ 𝐀ᴜᴅɪᴏ 𝐕ɪᴅᴇᴏ❗...\n\nℹ️ 𝐄xᴀᴍᴘʟᴇs:\n≽ 𝐀ᴜᴅɪᴏ: `/play siya ram`\n≽ 𝐕ɪᴅᴇᴏ: `/vplay siya ram`**",
+                reply_markup=buttons,
+            )
+        query = message.text.split(None, 1)[1]
+        if "https://" in query:
+            base = r"(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)?(?:shorts\/|live\/)?(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*$"
+            resu = re.findall(base, query)
+            vidid = resu[0] if resu[0] else None
+        else:
+            vidid = None
+        url = f"https://www.youtube.com/watch?v={vidid}" if vidid else None
+        search_query = url if url else query
+        results = VideosSearch(search_query, limit=1)
+        for result in (await results.next())["result"]:
+            vid_id = vidid if vidid else result["id"]
+            vid_url = url if url else result["link"]
+            try:
+                title = "[" + (result["title"][:18]) + "]" + f"({vid_url})"
+                title_x = result["title"]
+            except Exception:
+                title = "Unsupported Title"
+                title_x = title
+            try:
+                durationx = result.get("duration")
+                if not durationx:
+                    duration = "Live Stream"
+                    duration_x = "Live"
+                elif len(durationx) == 4 or len(durationx) == 7:
+                    duration = f"0{durationx} Mins"
+                    duration_x = f"0{durationx}"
+                else:
+                    duration = f"{durationx} Mins"
+                    duration_x = f"{duration}"
+            except Exception:
+                duration = "Unknown"
+                duration_x = "Unknown Mins"
+            try:
+                views = result["viewCount"]["short"]
+            except Exception:
+                views = "Unknown Views"
+            try:
+                channel = result["channel"]["name"]
+            except Exception:
+                channel = "Unknown Channel"
+        stream_link = url if url else result["link"]
+        stream_file = await get_youtube_stream(stream_link)
+        result_x = {
+            "title": title_x,
+            "id": vid_id,
+            "link": vid_url,
+            "duration": duration_x,
+            "views": views,
+            "channel": channel,
+        }
+        stream_type = "Audio" if str(message.command[0][0]) != "v" else "Video"
+
+    try:
+        requested_by = user.mention
+    except Exception:
+        if user.username:
+            requested_by = "[" + user.title + "](https://t.me/" + user.username + ")"
+        else:
+            requested_by = user.title
+    buttons = InlineKeyboardMarkup(
+        [
             [
-                [
-                    InlineKeyboardButton(
-                        text="❖ ᴛᴧᴘ тᴏ sᴇᴇ ᴍᴧɪᴄ ❖",
-                        url=f"https://t.me/{bot.me.username}?startgroup=true",
-                    )
-                ],
-                [
-                InlineKeyboardButton("˹ ᴜᴘᴅᴧᴛᴇ ˼", url="https://t.me/net_pro_max"),
-                InlineKeyboardButton("˹ sᴜᴘᴘᴏꝛᴛ  ˼", url="https://t.me/+ifTJa6EmP4A1MTA9")
-                ],
-                [
-                    InlineKeyboardButton(
-                        text="〆 ᴄʟᴏsᴇ 〆",
-                        callback_data="force_close",
-                    )
-                ],
-            ]
+                InlineKeyboardButton(
+                    text="❖ ᴛᴧᴘ тᴏ sᴇᴇ ᴍᴧɪᴄ ❖",
+                    url=f"https://t.me/{bot.me.username}?startgroup=true",
+                )
+            ],
+            [
+            InlineKeyboardButton("˹ ᴜᴘᴅᴧᴛᴇ ˼", url="https://t.me/net_pro_max"),
+            InlineKeyboardButton("˹ sᴜᴘᴘᴏꝛᴛ  ˼", url="https://t.me/+ifTJa6EmP4A1MTA9")
+            ],
+            [
+                InlineKeyboardButton(
+                    text="〆 ᴄʟᴏsᴇ 〆",
+                    callback_data="force_close",
+                )
+            ],
+        ]
+    )
+    if stream_type == "Audio":
+        stream_media = MediaStream(
+            media_path=stream_file,
+            video_flags=MediaStream.Flags.IGNORE,
+            audio_parameters=AudioQuality.STUDIO,
+            ytdlp_parameters="--cookies cookies.txt",
         )
-        if stream_type == "Audio":
-            stream_media = MediaStream(
-                media_path=stream_file,
-                video_flags=MediaStream.Flags.IGNORE,
-                audio_parameters=AudioQuality.STUDIO,
-                ytdlp_parameters="--cookies cookies.txt",
-            )
-        elif stream_type == "Video":
-            stream_media = MediaStream(
-                media_path=stream_file,
-                audio_parameters=AudioQuality.STUDIO,
-                video_parameters=VideoQuality.HD_720p,
-                ytdlp_parameters="--cookies cookies.txt",
-            )
+    elif stream_type == "Video":
+        stream_media = MediaStream(
+            media_path=stream_file,
+            audio_parameters=AudioQuality.STUDIO,
+            video_parameters=VideoQuality.HD_720p,
+            ytdlp_parameters="--cookies cookies.txt",
+        )
         queued = queues.get(chat_id)
         if queued:
             thumbnail = await create_thumbnail(info, user_id)
