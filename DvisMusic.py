@@ -55,7 +55,7 @@ BOT_TOKEN = getenv("BOT_TOKEN", None)
 STRING_SESSION = getenv("STRING_SESSION", None)
 MONGO_DB_URL = getenv("MONGO_DB_URL", None)
 OWNER_ID = int(getenv("OWNER_ID", 0))
-LOG_GROUP_ID = int(getenv("LOG_GROUP_ID", 0))
+LOGGER_ID = int(getenv("LOGGER_ID", 0))
 
 
 # OPTIONAL VARIABLES
@@ -111,8 +111,8 @@ mongodb = adb_cli.adityaplayer
 if OWNER_ID == 0:
     logs.info("⚠️ 'OWNER_ID' - Not Found !!")
     sys.exit()
-if LOG_GROUP_ID == 0:
-    logs.info("⚠️ 'LOG_GROUP_ID' - Not Found !!")
+if LOGGER_ID == 0:
+    logs.info("⚠️ 'LOGGER_ID' - Not Found !!")
     sys.exit()
 
 
@@ -201,10 +201,10 @@ async def main():
     except Exception as e:
         logs.info(f"🚫 Failed to start Bot❗\n⚠️ Reason: {e}")
         sys.exit()
-    if LOG_GROUP_ID != 0:
+    if LOGGER_ID != 0:
         try:
             await bot.send_message(
-                LOG_GROUP_ID, "**✅ Bot Started.**"
+                LOGGER_ID, "**✅ Bot Started.**"
             )
         except Exception:
             pass
@@ -219,10 +219,10 @@ async def main():
         await app.join_chat("AdityaDiscus")
     except Exception:
         pass
-    if LOG_GROUP_ID != 0:
+    if LOGGER_ID != 0:
         try:
             await app.send_message(
-                LOG_GROUP_ID, "**✅ Assistant Started.**"
+                LOGGER_ID, "**✅ Assistant Started.**"
             )
         except Exception:
             pass
@@ -528,7 +528,7 @@ async def close_stream(chat_id):
 
 
 async def log_stream_info(chat_id, title, duration, stream_type, chat_link, mention, thumbnail, pos):
-    if LOG_GROUP_ID != 0 and chat_id != LOG_GROUP_ID:
+    if LOGGER_ID != 0 and chat_id != LOGGER_ID:
         buttons = InlineKeyboardMarkup(
             [
                 [
@@ -557,7 +557,7 @@ async def log_stream_info(chat_id, title, duration, stream_type, chat_link, ment
 **❍ Requested By:** {mention}"""
         
         try:
-            await bot.send_photo(LOG_GROUP_ID, photo=thumbnail, caption=caption, reply_markup=buttons)
+            await bot.send_photo(LOGGER_ID, photo=thumbnail, caption=caption, reply_markup=buttons)
         except Exception:
             pass
 
