@@ -84,6 +84,20 @@ queues = {}
 clinks = {}
 
 
+
+def cdx(commands: Union[str, List[str]]):
+    return pyrofl.command(commands, ["/", "!", "."])
+
+
+def cdz(commands: Union[str, List[str]]):
+    return pyrofl.command(commands, ["", "/", "!", "."])
+
+
+def rgx(pattern: Union[str, Pattern]):
+    return pyrofl.regex(pattern)
+
+
+
 if "cookies.txt" not in os.listdir():
         logs.info("⚠️ 'cookies.txt' - Not Found❗")
         sys.exit()
@@ -639,7 +653,7 @@ async def change_stream(chat_id):
 
 
 
-@bot.on_message(filters.command("start") & filters.private)
+@bot.on_message(filters.command("start") & pyrofl.private)
 async def start_welcome_private(client, message):
     chat_id = message.chat.id
     await add_served_user(chat_id)
@@ -675,7 +689,7 @@ powerƒul vc music player bot.
         
 
 
-@bot.on_message(filters.command("help") & filters.private)
+@bot.on_message(filters.command("help") & ~pyrofl.private)
 async def open_help_menu_private(client, message):
     chat_id = message.chat.id
     photo = START_IMAGE_URL
@@ -713,7 +727,7 @@ Their Uses.
 
 
 
-@bot.on_message(filters.command(["play", "vplay"]) & ~filters.private)
+@bot.on_message(filters.command(["play", "vplay"]) & ~~pyrofl.private)
 async def start_audio_stream(client, message):
     try:
         await message.delete()
@@ -994,7 +1008,7 @@ async def start_audio_stream(client, message):
 
 
 
-@bot.on_message(filters.command("pause") & ~filters.private)
+@bot.on_message(filters.command("pause") & ~~pyrofl.private)
 @chat_admins_only
 async def pause_current_stream(client, message):
     chat_id = message.chat.id
@@ -1019,7 +1033,7 @@ async def pause_current_stream(client, message):
     
 
 
-@bot.on_message(filters.command("resume") & ~filters.private)
+@bot.on_message(filters.command("resume") & ~~pyrofl.private)
 @chat_admins_only
 async def resume_current_stream(client, message):
     chat_id = message.chat.id
@@ -1043,7 +1057,7 @@ async def resume_current_stream(client, message):
     return await message.reply_text("**✅ Stream now Resumed.**")
     
 
-@bot.on_message(filters.command("end") & ~filters.private)
+@bot.on_message(filters.command("end") & ~~pyrofl.private)
 @chat_admins_only
 async def stop_running_stream(client, message):
     chat_id = message.chat.id
@@ -1056,7 +1070,7 @@ async def stop_running_stream(client, message):
     return await message.reply_text("**❎ Streaming Stopped.**")
 
 
-@bot.on_message(filters.command("skip") & ~filters.private)
+@bot.on_message(filters.command("skip") & ~~pyrofl.private)
 @chat_admins_only
 async def skip_current_stream(client, message):
     chat_id = message.chat.id
