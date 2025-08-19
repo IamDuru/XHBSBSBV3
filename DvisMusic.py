@@ -717,7 +717,7 @@ Their Uses.
 
 
 @bot.on_message(filters.command(["play", "vplay"]) & ~filters.private)
-async def stream_audio_or_video(client: Client, message: Message):
+async def stream_audio_or_video(client, message):
     try:
         try:
             await message.delete()
