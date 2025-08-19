@@ -1,5 +1,5 @@
 import aiofiles, aiohttp, asyncio, base64, gc, httpx, io, json
-import logging, numpy as np, os, random, re, sys, textwrap
+import logging, numpy as np, os, random, re, sys, textwrap, yt_dlp
 
 from os import getenv
 from io import BytesIO
