@@ -1,6 +1,4 @@
-# Use a tag based on a supported OS version like Bullseye or Bookworm
-# Example tag (check Docker Hub for the exact one you want):
-FROM nikolaik/python-nodejs:python3.10-nodejs19-bullseye # <--- Replace with the correct tag
+FROM nikolaik/python-nodejs:python3.10-nodejs19-bullseye
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends ffmpeg aria2 \
