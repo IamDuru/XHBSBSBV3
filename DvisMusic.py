@@ -453,6 +453,28 @@ async def create_thumbnail(results, user_id):
         return results.get("thumbnail", START_IMAGE_URL)
 
 
+async def get_youtube_stream(link):
+    loops = asyncio.get_running_loop()
+    def get_stream_url():
+        ydl_optssx = {
+            "format": "best",
+            "outtmpl": "downloads/%(id)s.%(ext)s",
+            "geo_bypass": True,
+            "nocheckcertificate": True,
+            "quiet": True,
+            "no_warnings": True,
+            "cookiefile": "cookies.txt",
+        }
+        x = yt_dlp.YoutubeDL(ydl_optssx)
+        info = x.extract_info(link, False)
+        xyz = info['url']
+        return xyz
+        
+    downloaded_file = await loops.run_in_executor(
+        None, get_stream_url
+    )
+    return downloaded_file
+
     
 
 async def add_active_media_chat(chat_id, stream_type):
@@ -748,7 +770,7 @@ Stream Audio Or Video❗...
         aux = await client.send_message(chat_id, "**🔁 Processing ✨...**")
         query = message.text.split(None, 1)[1]
         streamtype = "Audio" if not message.command[0].startswith("v") else "Video"
-        info = await get_stream_info(query, streamtype)
+        info = await get_youtube_stream(query, streamtype)
         if not info:
             return await aux.edit("**❌ Failed to fecth details, try\nanother song.**")
             
@@ -767,10 +789,12 @@ Stream Audio Or Video❗...
             media_path=stream_url,
             video_flags=MediaStream.Flags.IGNORE,
             audio_parameters=AudioQuality.STUDIO,
+            ytdlp_parameters="--cookies cookies.txt",
         ) if stream_type != "Video" else MediaStream(
             media_path=stream_url,
             audio_parameters=AudioQuality.STUDIO,
             video_parameters=VideoQuality.HD_720p,
+            ytdlp_parameters="--cookies cookies.txt",
         )
         
         buttons = InlineKeyboardMarkup(
