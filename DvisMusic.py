@@ -715,269 +715,181 @@ Their Uses.
 
 
 
-
 @bot.on_message(filters.command(["play", "vplay"]) & ~filters.private)
-async def stream_audio_or_video(client, message):
+async def stream_audio_or_video(client: Client, message: Message):
     try:
         await message.delete()
-    except Exception:
-        pass
+    except Exception as e:
+        logs.warning("Could not delete command msg: %s", e)
+
     chat_id = message.chat.id
     await add_served_chat(chat_id)
-    user = message.from_user if message.from_user else message.sender_chat
+
+    user = message.from_user or message.sender_chat
     replied = message.reply_to_message
-    audio = (replied.audio or replied.voice) if replied else None
-    video = (replied.video or replied.document) if replied else None
-    stickers = [
-        "🌹",
-        "🌺",
-        "🎉",
-        "🎃",
-        "💥",
-        "🦋",
-        "🕊️",
-        "❤️",
-        "💖",
-        "💝",
-        "💗",
-        "💓",
-        "💘",
-        "💞",
-    ]
+
+    audio = (replied and (replied.audio or replied.voice)) or None
+    video = (replied and (replied.video or replied.document)) or None
+
+    stickers = ["🌹", "🌺", "🎉", "🎃", "💥", "🦋", "🕊️", "❤️", "💖",
+                "💝", "💗", "💓", "💘", "💞"]
     aux = await message.reply_text(random.choice(stickers))
-    if audio:
+
+    # ---------- 1. Audio / Video from reply ----------
+    if audio or video:
         title = "Unsupported Title"
         duration = "Unknown"
         try:
             stream_file = await replied.download()
         except Exception:
+            await aux.delete()
             return
         result_x = None
-        stream_type = "Audio"
+        stream_type = "Audio" if audio else "Video"
 
-    elif video:
-        title = "Unsupported Title"
-        duration = "Unknown"
-        try:
-            stream_file = await replied.download()
-        except Exception:
-            return
-        result_x = None
-        stream_type = "Video"
-
+    # ---------- 2. YouTube / Query ----------
     else:
         if len(message.command) < 2:
             buttons = InlineKeyboardMarkup(
-                [
-                    [
-                InlineKeyboardButton(
-                    text="❖ ᴛᴧᴘ тᴏ sᴇᴇ ᴍᴧɪᴄ ❖",
-                    url=f"https://t.me/{bot.me.username}?startgroup=true",
-                )
-                    ],
-                    [
-            InlineKeyboardButton("˹ ᴜᴘᴅᴧᴛᴇ ˼", url="https://t.me/net_pro_max"),
-            InlineKeyboardButton("˹ sᴜᴘᴘᴏꝛᴛ  ˼", url="https://t.me/+ifTJa6EmP4A1MTA9")
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            text="〆 ᴄʟᴏsᴇ 〆",
-                            callback_data="force_close",
-                        )
-                    ],
-                ]
+                [[InlineKeyboardButton(
+                    "❖ ᴛᴀᴘ ᴛᴏ sᴇᴇ ᴍᴀɢɪᴄ ❖",
+                    url=f"https://t.me/{bot.me.username}?startgroup=true")],
+                 [InlineKeyboardButton("˹ ᴜᴘᴅᴀᴛᴇ ˼", url="https://t.me/net_pro_max"),
+                  InlineKeyboardButton("˹ sᴜᴘᴘᴏʀᴛ ˼", url="https://t.me/+ifTJa6EmP4A1MTA9")],
+                 [InlineKeyboardButton("〆 ᴄʟᴏsᴇ 〆", callback_data="force_close")]]
             )
             return await aux.edit_text(
                 "**🥀 𝐆ɪᴠᴇ 𝐌ᴇ  𝐒ᴏᴍᴇ 𝐐ᴜᴇʀʏ To\n𝐏ʟᴀʏ 𝐀ᴜᴅɪᴏ 𝐕ɪᴅᴇᴏ❗...\n\nℹ️ 𝐄xᴀᴍᴘʟᴇs:\n≽ 𝐀ᴜᴅɪᴏ: `/play siya ram`\n≽ 𝐕ɪᴅᴇᴏ: `/vplay siya ram`**",
-                reply_markup=buttons,
-            )
+                reply_markup=buttons)
+
         query = message.text.split(None, 1)[1]
+        vidid = None
         if "https://" in query:
-            base = r"(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)?(?:shorts\/|live\/)?(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*$"
-            resu = re.findall(base, query)
-            vidid = resu[0] if resu[0] else None
-        else:
-            vidid = None
+            rx = r"(?:https?:)?(?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(?:\-nocookie)?\.(?:[A-Za-z]{2,4}|[A-Za-z]{2,3}\.[A-Za-z]{2})\/)?(?:shorts\/|live\/)?(?:watch|embed\/|vi?\/)*(?:\?[\w=&]*vi?=)?([^#&\?\/]{11}).*$"
+            res = re.findall(rx, query)
+            vidid = res[0] if res else None
+
         url = f"https://www.youtube.com/watch?v={vidid}" if vidid else None
-        search_query = url if url else query
+        search_query = url or query
         results = VideosSearch(search_query, limit=1)
-        for result in (await results.next())["result"]:
-            vid_id = vidid if vidid else result["id"]
-            vid_url = url if url else result["link"]
-            try:
-                title = "[" + (result["title"][:18]) + "]" + f"({vid_url})"
-                title_x = result["title"]
-            except Exception:
-                title = "Unsupported Title"
-                title_x = title
-            try:
-                durationx = result.get("duration")
-                if not durationx:
-                    duration = "Live Stream"
-                    duration_x = "Live"
-                elif len(durationx) == 4 or len(durationx) == 7:
-                    duration = f"0{durationx} Mins"
-                    duration_x = f"0{durationx}"
-                else:
-                    duration = f"{durationx} Mins"
-                    duration_x = f"{duration}"
-            except Exception:
-                duration = "Unknown"
-                duration_x = "Unknown Mins"
-            try:
-                views = result["viewCount"]["short"]
-            except Exception:
-                views = "Unknown Views"
-            try:
-                channel = result["channel"]["name"]
-            except Exception:
-                channel = "Unknown Channel"
-        stream_link = url if url else result["link"]
+        result = (await results.next())["result"][0]
+
+        vid_id = vidid or result["id"]
+        vid_url = url or result["link"]
+
+        title = f"[{result['title'][:18]}]({vid_url})"
+        title_x = result["title"]
+
+        durationx = result.get("duration")
+        if not durationx:
+            duration = "Live Stream"
+            duration_x = "Live"
+        elif len(durationx) in (4, 7):
+            duration = f"0{durationx} Mins"
+            duration_x = f"0{durationx}"
+        else:
+            duration = f"{durationx} Mins"
+            duration_x = f"{durationx}"
+
+        views = result.get("viewCount", {}).get("short", "Unknown Views")
+        channel = result.get("channel", {}).get("name", "Unknown Channel")
+
+        stream_link = vid_url
         stream_file = await get_youtube_stream(stream_link)
-        result_x = {
-            "title": title_x,
-            "id": vid_id,
-            "link": vid_url,
-            "duration": duration_x,
-            "views": views,
-            "channel": channel,
-        }
+        result_x = dict(title=title_x, id=vid_id, link=vid_url,
+                        duration=duration_x, views=views, channel=channel)
         stream_type = "Audio" if str(message.command[0][0]) != "v" else "Video"
 
-    try:
-        requested_by = user.mention
-    except Exception:
-        if user.username:
-            requested_by = "[" + user.title + "](https://t.me/" + user.username + ")"
-        else:
-            requested_by = user.title
-    buttons = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(
-                    text="❖ ᴛᴧᴘ тᴏ sᴇᴇ ᴍᴧɪᴄ ❖",
-                    url=f"https://t.me/{bot.me.username}?startgroup=true",
-                )
-            ],
-            [
-            InlineKeyboardButton("˹ ᴜᴘᴅᴧᴛᴇ ˼", url="https://t.me/net_pro_max"),
-            InlineKeyboardButton("˹ sᴜᴘᴘᴏꝛᴛ  ˼", url="https://t.me/+ifTJa6EmP4A1MTA9")
-            ],
-            [
-                InlineKeyboardButton(
-                    text="〆 ᴄʟᴏsᴇ 〆",
-                    callback_data="force_close",
-                )
-            ],
-        ]
-    )
+    # ---------- 3. Build MediaStream ----------
     if stream_type == "Audio":
-        stream_media = MediaStream(
-            media_path=stream_file,
+        from pytgcalls.types import AudioQuality, MediaStream
+        media_stream = MediaStream(
+            stream_file,
             video_flags=MediaStream.Flags.IGNORE,
             audio_parameters=AudioQuality.STUDIO,
-            ytdlp_parameters="--cookies cookies.txt",
-        )
-    elif stream_type == "Video":
-        stream_media = MediaStream(
-            media_path=stream_file,
+            ytdlp_parameters="--cookies cookies.txt")
+    else:
+        from pytgcalls.types import AudioQuality, VideoQuality, MediaStream
+        media_stream = MediaStream(
+            stream_file,
             audio_parameters=AudioQuality.STUDIO,
             video_parameters=VideoQuality.HD_720p,
-            ytdlp_parameters="--cookies cookies.txt",
-        )
-        queued = queues.get(chat_id)
-        if queued:
-            thumbnail = await create_thumbnail(info, user_id)
-            pos = await put_queue(
-                chat_id, media_stream, thumbnail, title, duration, stream_type, chat_link, mention
-            )
-            caption = f"""
+            ytdlp_parameters="--cookies cookies.txt")
+
+    # ---------- 4. Queue / Play ----------
+    queued = queues.get(chat_id)
+    if queued:
+        thumbnail = await create_thumbnail(result_x, user.id)
+        pos = await put_queue(
+            chat_id, media_stream, thumbnail, title, duration,
+            stream_type, vid_url, user.mention or user.title)
+        caption = f"""
 **✅ Added To Queue At: #{pos}**
 
 **❍ Title:** {title}
 **❍ Duration:** {duration}
 **❍ Stream Type:** {stream_type}
-**❍ Requested By:** {mention}"""
-        
-        else:
-            try: 
-                await call.play(chat_id, media_stream, config=call_config)
-            except NoActiveGroupCall:
+**❍ Requested By:** {user.mention or user.title}"""
+    else:
+        try:
+            await call.play(chat_id, media_stream, config=call_config)
+        except Exception as e:
+            if "NoActiveGroupCall" in str(e):
                 try:
                     assistant = await client.get_chat_member(chat_id, app.me.id)
-                    if (
-                        assistant.status == ChatMemberStatus.BANNED
-                        or assistant.status == ChatMemberStatus.RESTRICTED
-                    ):
+                    if assistant.status in (ChatMemberStatus.BANNED, ChatMemberStatus.RESTRICTED):
                         return await aux.edit_text(
-                            f"**🤖 At first, unban [Assistant ID](https://t.me/{app.me.username}) to start stream❗**"
-                        )
-                except ChatAdminRequired:
-                    return await aux.edit_text(
-                        "**🤖 At first, Promote me as an admin❗**"
-                    )
-                except UserNotParticipant:
-                    if message.chat.username:
-                        invitelink = f"https://t.me/{message.chat.username}"
-                        try:
-                            await app.resolve_peer(invitelink)
-                        except Exception:
-                            pass
-                    else:
-                        try:
-                            invitelink = await client.export_chat_invite_link(chat_id)
-                        except ChatAdminRequired:
-                            return await aux.edit_text(
-                                "**🤖 Hey, I need invite user permission to add Assistant ID❗**"
-                            )
-                        except Exception as e:
-                            return await aux.edit_text(
-                                f"**🚫 Assistant Error:** `{e}`"
-                            )
-                    clinks[chat_id] = invitelink
+                            f"**🤖 At first, unban [Assistant ID](https://t.me/{app.me.username}) to start stream❗**")
+                except Exception:
                     try:
-                        await asyncio.sleep(1)
-                        await app.join_chat(invitelink)
-                    except InviteRequestSent:
-                        try:
-                            await client.approve_chat_join_request(chat_id, app.me.id)
-                        except Exception as e:
-                            return await aux.edit_text(
-                                f"**🚫 Approve Error:** `{e}`"
-                            )
-                    except UserAlreadyParticipant:
-                        pass
-                    except Exception as e:
-                        return await aux.edit_text(
-                            f"**🚫 Assistant Join Error:** `{e}`"
-                        )
-                try:
-                    await call.play(chat_id, media_stream, config=call_config)
-                except NoActiveGroupCall:
-                    return await aux.edit_text(f"**⚠️ No Active VC❗...**")
-            except TelegramServerError:
-                return await aux.edit_text("**⚠️ Telegram Server Issue❗...**")
-                
-            thumbnail = await create_thumbnail(info, user_id)
-            pos = await put_queue(
-                chat_id, media_stream, thumbnail, title, duration, stream_type, chat_link, mention
-            )
-            caption = f"""
+                        link = clinks.get(chat_id) or await client.export_chat_invite_link(chat_id)
+                        await app.join_chat(link)
+                        await call.play(chat_id, media_stream, config=call_config)
+                    except Exception as ex:
+                        await aux.edit_text(f"**🚫 Could not start VC:** `{ex}`")
+                        return
+            else:
+                await aux.edit_text(f"**⚠️ Could not play:** `{e}`")
+                return
+
+        thumbnail = await create_thumbnail(result_x, user.id)
+        pos = await put_queue(
+            chat_id, media_stream, thumbnail, title, duration,
+            stream_type, vid_url, user.mention or user.title)
+
+        caption = f"""
 **✅ Started Streaming On VC.**
 
 **❍ Title:** {title}
 **❍ Duration:** {duration}
 **❍ Stream Type:** {stream_type}
-**❍ Requested By:** {mention}"""
-        
-        try:
-            await aux.delete()
-        except Exception:
-            pass
-        await client.send_photo(chat_id, photo=thumbnail, caption=caption, has_spoiler=True, reply_markup=buttons)
-        await add_active_media_chat(chat_id, stream_type)
-        await add_served_chat(chat_id)
-        await log_stream_info(chat_id, title, duration, stream_type, chat_link, mention, thumbnail, pos)
+**❍ Requested By:** {user.mention or user.title}"""
+
+    # ---------- 5. Final cleanup ----------
+    try:
+        await aux.delete()
+    except Exception:
+        pass
+
+    buttons = InlineKeyboardMarkup(
+        [[InlineKeyboardButton(
+            "❖ ᴛᴀᴘ ᴛᴏ sᴇᴇ ᴍᴀɢɪᴄ ❖",
+            url=f"https://t.me/{bot.me.username}?startgroup=true")],
+         [InlineKeyboardButton("˹ ᴜᴘᴅᴀᴛᴇ ˼", url="https://t.me/net_pro_max"),
+          InlineKeyboardButton("˹ sᴜᴘᴘᴏʀᴛ ˼", url="https://t.me/+ifTJa6EmP4A1MTA9")],
+         [InlineKeyboardButton("〆 ᴄʟᴏsᴇ 〆", callback_data="force_close")]]
+    )
+
+    await client.send_photo(
+        chat_id, photo=thumbnail, caption=caption,
+        has_spoiler=True, reply_markup=buttons)
+
+    await add_active_media_chat(chat_id, stream_type)
+    await add_served_chat(chat_id)
+    await log_stream_info(chat_id, title, duration,
+                          stream_type, vid_url,
+                          user.mention or user.title,
+                          thumbnail, pos)
     except Exception as e:
         if "too many open files" in str(e).lower():
             close_all_open_files()
