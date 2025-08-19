@@ -1,6 +1,7 @@
 FROM nikolaik/python-nodejs:python3.10-nodejs19-bullseye
 
-RUN sed -i 's|buster|bullseye|g' /etc/apt/sources.list \
+# Fix stale sources
+RUN sed -i 's/buster/bullseye/g' /etc/apt/sources.list \
  && apt-get update \
  && apt-get install -y --no-install-recommends ffmpeg aria2 \
  && apt-get clean \
