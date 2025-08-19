@@ -693,7 +693,7 @@ powerƒul vc music player bot.
         
 
 
-@bot.on_message(filters.command("help") & ~pyrofl.private)
+@bot.on_message(filters.command("help") & ~pyrofl.privatepyrofl.private)
 async def open_help_menu_private(client, message):
     chat_id = message.chat.id
     photo = START_IMAGE_URL
@@ -731,7 +731,7 @@ Their Uses.
 
 
 
-@bot.on_message(filters.command(["play", "vplay"]) & ~~pyrofl.private)
+@bot.on_message(filters.command(["play", "vplay"]) & ~pyrofl.private)
 async def start_audio_stream(client, message):
     try:
         await message.delete()
@@ -1012,7 +1012,7 @@ async def start_audio_stream(client, message):
 
 
 
-@bot.on_message(filters.command("pause") & ~~pyrofl.private)
+@bot.on_message(filters.command("pause") & ~pyrofl.private)
 @chat_admins_only
 async def pause_current_stream(client, message):
     chat_id = message.chat.id
@@ -1037,7 +1037,7 @@ async def pause_current_stream(client, message):
     
 
 
-@bot.on_message(filters.command("resume") & ~~pyrofl.private)
+@bot.on_message(filters.command("resume") & ~pyrofl.private)
 @chat_admins_only
 async def resume_current_stream(client, message):
     chat_id = message.chat.id
@@ -1061,7 +1061,7 @@ async def resume_current_stream(client, message):
     return await message.reply_text("**✅ Stream now Resumed.**")
     
 
-@bot.on_message(filters.command("end") & ~~pyrofl.private)
+@bot.on_message(filters.command("end") & ~pyrofl.private)
 @chat_admins_only
 async def stop_running_stream(client, message):
     chat_id = message.chat.id
@@ -1074,7 +1074,7 @@ async def stop_running_stream(client, message):
     return await message.reply_text("**❎ Streaming Stopped.**")
 
 
-@bot.on_message(filters.command("skip") & ~~pyrofl.private)
+@bot.on_message(filters.command("skip") & ~pyrofl.private)
 @chat_admins_only
 async def skip_current_stream(client, message):
     chat_id = message.chat.id
