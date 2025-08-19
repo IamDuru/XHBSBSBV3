@@ -1,20 +1,21 @@
-FROM nikolaik/python-nodejs:python3.10-nodejs19-bullseye
+FROM nikolaik/python-nodejs:python3.10-nodejs19
 
-# 1. 修复 APT 源：用 bullseye 替换 buster
-RUN set -eux; \
-    sed -i 's|buster|bullseye|g' /etc/apt/sources.list; \
+# 1️⃣  Fix APT sources: swap buster → bullseye
+RUN sed -i 's|buster|bullseye|g' /etc/apt/sources.list && \
     sed -i 's|buster/updates|bullseye-security|g' /etc/apt/sources.list
 
-# 2. 安装所需软件
+# 2️⃣  Install packages
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends ffmpeg aria2 && \
+    apt-get install -y --no-install-recommends \
+        ffmpeg \
+        aria2 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 3. 复制代码并安装依赖
-COPY . /app/
-WORKDIR /app/
+# 3️⃣  Copy code & install Python deps
+COPY . /app
+WORKDIR /app
 RUN python -m pip install --no-cache-dir --upgrade pip && \
-    pip3 install --no-cache-dir --upgrade --requirement requirements.txt
+    pip install --no-cache-dir -r requirements.txt
 
 CMD ["python3", "-m", "DvisMusic"]
