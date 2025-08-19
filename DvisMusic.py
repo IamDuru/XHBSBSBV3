@@ -84,6 +84,9 @@ queues = {}
 clinks = {}
 
 
+if "cookies.txt" not in os.listdir():
+        logs.info("⚠️ 'cookies.txt' - Not Found❗")
+        sys.exit()
 if API_ID == 0:
     logs.info("⚠️ 'API_ID' - Not Found !!")
     sys.exit()
@@ -453,7 +456,7 @@ async def create_thumbnail(results, user_id):
         return results.get("thumbnail", START_IMAGE_URL)
 
 
-async def get_youtube_stream(link):
+async def get_youtube_stream(link, streamtype):
     loops = asyncio.get_running_loop()
     def get_stream_url():
         ydl_optssx = {
@@ -633,15 +636,6 @@ async def change_stream(chat_id):
     await add_active_media_chat(chat_id, stream_type)
     await bot.send_photo(chat_id, photo=thumbnail, caption=caption, has_spoiler=True, reply_markup=buttons)
     await log_stream_info(chat_id, title, duration, stream_type, chat_link, mention, thumbnail, pos)
-
-    
-
-
-
-
-
-
-
 
 
 
@@ -1228,25 +1222,16 @@ async def add_chat_id(client, message):
         if member.id == bot.me.id:
             await add_served_chat(chat_id)
 
-
-
-
 @call.on_update(fl.chat_update(ChatUpdate.Status.CLOSED_VOICE_CHAT))
 @call.on_update(fl.chat_update(ChatUpdate.Status.KICKED))
 @call.on_update(fl.chat_update(ChatUpdate.Status.LEFT_GROUP))
 async def stream_services_handler(_, update: Update):
     return await close_stream(update.chat_id)
-    
-    
+     
 @call.on_update(fl.stream_end())
 async def stream_end_handler(_, update: Update):
     chat_id = update.chat_id
     return await change_stream(chat_id)
-
-
-
-
-
 
 
 if __name__ == "__main__":
