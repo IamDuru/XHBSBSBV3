@@ -22,10 +22,14 @@ from pyrogram.errors import (
 from pyrogram.types import (
     ChatPrivileges, InlineKeyboardMarkup, InlineKeyboardButton
 )
-from pytgcalls import PyTgCalls, filters as fl
+
+from pyrogram import Client, filters as pyrofl
+from pytgcalls import PyTgCalls, filters as pytgfl
+
 from pytgcalls.exceptions import NoActiveGroupCall
 from pytgcalls.types import ChatUpdate, Update, GroupCallConfig
 from pytgcalls.types import Call, MediaStream, AudioQuality, VideoQuality
+from youtubesearchpython.__future__ import VideosSearch
 
 
 logging.basicConfig(
