@@ -717,43 +717,17 @@ Their Uses.
 
 
 @bot.on_message(filters.command(["play", "vplay"]) & ~filters.private)
-async def start_audio_stream(client, message):
+async def stream_audio_or_video(client, message):
     try:
         await message.delete()
     except Exception:
         pass
     chat_id = message.chat.id
-    if message.chat.username:
-        chat_link = f"https://t.me/{message.chat.username}"
-    else:
-        chatlinks = clinks.get(chat_id)
-        
-        if chatlinks:
-            if chatlinks == f"https://t.me/{client.me.username}":
-                try:
-                    chat_link = await client.export_chat_invite_link(chat_id)
-                except Exception:
-                    chat_link = chatlinks
-            else:
-                chat_link = chatlinks
-        else:
-            try:
-                chat_link = await client.export_chat_invite_link(chat_id)
-            except Exception:
-                chat_link = f"https://t.me/{client.me.username}"
-            
-    clinks[chat_id] = chat_link
-    
-    try:
-        mention = message.from_user.mention
-    except:
-        mention = client.me.mention
-        
-    try:
-        user_id = message.from_user.id
-    except Exception:
-        user_id = client.me.id
-        
+    await add_served_chat(chat_id)
+    user = message.from_user if message.from_user else message.sender_chat
+    replied = message.reply_to_message
+    audio = (replied.audio or replied.voice) if replied else None
+    video = (replied.video or replied.document) if replied else None
         stickers = ["🌹", "🌺", "🎉", "🎃", "💥", "🦋", "🕊️", "❤️", "💖", "💝", "💗", "💓", "💘", "💞"]    
         aux = await message.reply_text(random.choice(stickers))
         if audio:
