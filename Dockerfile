@@ -1,5 +1,4 @@
-FROM nikolaik/python-nodejs:python3.10-nodejs19
-
+FROM nikolaik/python-nodejs:python3.10-nodejs20-bookworm
 # Point apt to the archived buster repositories
 RUN sed -i \
   -e 's|deb.debian.org|archive.debian.org|g' \
