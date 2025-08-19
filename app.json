@@ -13,12 +13,12 @@
     "env": {
       "API_ID": {
         "description": "Get this value from https://my.telegram.org",
-        "value": "28774732",
+        "value": "24168862",
         "required": true
       },
       "API_HASH": {
         "description": "Get this value from https://my.telegram.org",
-        "value": "02c1db016a07e9ece7fb5acb543e634b",
+        "value": "916a9424dd1e58ab7955001ccc0172b3",
         "required": true
       },
       "BOT_TOKEN": {
@@ -43,7 +43,7 @@
       },
       "LOGGER_ID": {
         "description": "Your Log Group ID, add your bot and promote as an admin with full rights!. Channel ki id mat daal dena bsdk.",
-        "value": "-1002168886769",
+        "value": "-1002418545472",
         "required": true
       },
       "START_IMAGE_URL": {
@@ -58,7 +58,7 @@
       },
       "UPSTREAM_BRANCH": {
         "description": "Upstream Repo's Branch Name",
-        "value": "main",
+        "value": "m1",
         "required": true
       }
     },
