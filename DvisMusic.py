@@ -4,7 +4,7 @@ import logging, numpy as np, os, random, re, sys, textwrap, yt_dlp
 from os import getenv
 from io import BytesIO
 from dotenv import load_dotenv
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Pattern
 from PIL import Image, ImageDraw, ImageEnhance
 from PIL import ImageFilter, ImageFont, ImageOps
 from logging.handlers import RotatingFileHandler
