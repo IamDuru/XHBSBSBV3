@@ -459,7 +459,7 @@ async def create_thumbnail(results, user_id):
         return results.get("thumbnail", START_IMAGE_URL)
 
 
-async def get_youtube_stream(link, streamtype):
+async def get_youtube_stream(link):
     loops = asyncio.get_running_loop()
     def get_stream_url():
         ydl_optssx = {
