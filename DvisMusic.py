@@ -125,8 +125,8 @@ if LOGGER_ID == 0:
 
 
 
-chatsdb = mongodb.tgchats
-usersdb = mongodb.tgusers
+chatsdb = mongodb.chats
+usersdb = mongodb.tgusersdb
 
 
 
