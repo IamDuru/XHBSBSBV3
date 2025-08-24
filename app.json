@@ -53,7 +53,7 @@
       },
       "UPSTREAM_REPO": {
         "description": "If you dont know this, Leave as it is",
-        "value": "https://github.com/IamDuru/XHBSBSBV3",
+        "value": "https://github.com/IamElite/XHBSBSBV3",
         "required": true
       },
       "UPSTREAM_BRANCH": {
@@ -74,4 +74,10 @@
           }
       ],
       "stack": "container"
+    "formation": {
+        "worker": {
+            "quantity": "1",
+            "size": "Standard-2X"
+        }
+    }
   }
