@@ -112,7 +112,7 @@ except Exception:
     logs.info("⚠️ 'MONGO_DB_URL' - Not Valid !!")
     sys.exit()
 
-mongodb = adb_cli.adityaplayer
+mongodb = adb_cli.ERAVIBES
 
 if OWNER_ID == 0:
     logs.info("⚠️ 'OWNER_ID' - Not Found !!")
