@@ -891,37 +891,43 @@ async def stream_audio_or_video(client, message):
             except Exception as e:
                 if "NoActiveGroupCall" in str(e):
                     try:
-                        assistant = await client.get_chat_member(chat_id, app.me.id)
-                        if assistant.status in (ChatMemberStatus.BANNED, ChatMemberStatus.RESTRICTED):
-                            return await aux.edit_text(
-                                f"**🤖 At first, unban [Assistant ID](https://t.me/{app.me.username}) to start stream❗**")
-                        
-                        # Start a group call first
+                        # Check if bot is already in group
+                        try:
+                            assistant = await client.get_chat_member(chat_id, app.me.id)
+                            if assistant.status in (ChatMemberStatus.BANNED, ChatMemberStatus.RESTRICTED):
+                                return await aux.edit_text(
+                                    f"**🤖 At first, unban [Assistant ID](https://t.me/{app.me.username}) to start stream❗**")
+                        except Exception:
+                            pass  # Bot might not be in group
+
+                        # Try to start group call
                         try:
                             await client.send_message(chat_id, "**🔄 No active group call found. Starting a new group call...**")
                             await client.create_group_call(chat_id)
-                            await asyncio.sleep(2)  # Wait for group call to initialize
+                            await asyncio.sleep(2)
                             await call.play(chat_id, media_stream, config=call_config)
                             return
                         except Exception as call_ex:
-                            return await aux.edit_text(f"**🚫 Could not start group call:** `{call_ex}`")
-                    except Exception:
-                        try:
-                            link = clinks.get(chat_id) or await client.export_chat_invite_link(chat_id)
-                            await app.join_chat(link)
-                            
-                            # Try to start group call after joining
+                            # If bot is not in group, try to join
                             try:
-                                await client.send_message(chat_id, "**🔄 No active group call found. Starting a new group call...**")
-                                await client.create_group_call(chat_id)
-                                await asyncio.sleep(2)  # Wait for group call to initialize
-                            except Exception as call_ex:
-                                pass
+                                link = clinks.get(chat_id) or await client.export_chat_invite_link(chat_id)
+                                await app.join_chat(link)
+                                await asyncio.sleep(1)
                                 
-                            await call.play(chat_id, media_stream, config=call_config)
-                        except Exception as ex:
-                            await aux.edit_text(f"**🚫 Could not start VC:** `{ex}`")
-                            return
+                                # Try to start group call after joining
+                                try:
+                                    await client.create_group_call(chat_id)
+                                    await asyncio.sleep(2)
+                                except Exception:
+                                    pass  # Group call might already exist
+                                    
+                                await call.play(chat_id, media_stream, config=call_config)
+                            except Exception as join_ex:
+                                await aux.edit_text(f"**🚫 Could not join group or start call:** `{join_ex}`")
+                                return
+                    except Exception as ex:
+                        await aux.edit_text(f"**🚫 Could not start VC:** `{ex}`")
+                        return
                 else:
                     await aux.edit_text(f"**⚠️ Could not play:** `{e}`")
                     return
