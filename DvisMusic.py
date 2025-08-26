@@ -638,7 +638,7 @@ async def log_stream_info(chat_id, title, duration, stream_type, chat_link, ment
 **❍ Requested By:** {mention}"""
         
         try:
-            await bot.send_photo(LOGGER_ID, photo=thumbnail, caption=caption, has_spoiler=True, reply_markup=buttons)
+            await bot.send_photo(LOGGER_ID, photo=thumbnail, caption=caption, reply_markup=buttons)
         except Exception:
             pass
 
@@ -690,7 +690,7 @@ async def change_stream(chat_id):
     except Exception:
         pass
     await add_active_media_chat(chat_id, stream_type)
-    await bot.send_photo(chat_id, photo=thumbnail, caption=caption, has_spoiler=True, reply_markup=buttons)
+    await bot.send_photo(chat_id, photo=thumbnail, caption=caption, reply_markup=buttons)
     await log_stream_info(chat_id, title, duration, stream_type, chat_link, mention, thumbnail, pos)
 
 
@@ -724,7 +724,7 @@ powerƒul vc music player bot.
     )
     try:
         return await client.send_photo(
-            chat_id, photo=photo, caption=caption, has_spoiler=True, reply_markup=buttons
+            chat_id, photo=photo, caption=caption, reply_markup=buttons
         )
     except Exception:
         pass
@@ -760,7 +760,7 @@ Their Uses.
     )
     try:
         await bot.send_photo(
-            chat_id, photo=photo, caption=caption, has_spoiler=True, reply_markup=buttons
+            chat_id, photo=photo, caption=caption, reply_markup=buttons
         )
     except Exception:
         pass
