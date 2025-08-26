@@ -221,8 +221,8 @@ async def main():
         logs.info(f"🚫 Failed to start Assistant❗\n⚠️ Reason: {e}")
         sys.exit()
     try:
-        await app.join_chat("AdityaServer")
-        await app.join_chat("AdityaDiscus")
+        await app.join_chat("net_pro_max")
+        await app.join_chat("ai_image_junction")
     except Exception:
         pass
     if LOGGER_ID != 0:
@@ -895,10 +895,29 @@ async def stream_audio_or_video(client, message):
                         if assistant.status in (ChatMemberStatus.BANNED, ChatMemberStatus.RESTRICTED):
                             return await aux.edit_text(
                                 f"**🤖 At first, unban [Assistant ID](https://t.me/{app.me.username}) to start stream❗**")
+                        
+                        # Start a group call first
+                        try:
+                            await client.send_message(chat_id, "**🔄 No active group call found. Starting a new group call...**")
+                            await client.create_group_call(chat_id)
+                            await asyncio.sleep(2)  # Wait for group call to initialize
+                            await call.play(chat_id, media_stream, config=call_config)
+                            return
+                        except Exception as call_ex:
+                            return await aux.edit_text(f"**🚫 Could not start group call:** `{call_ex}`")
                     except Exception:
                         try:
                             link = clinks.get(chat_id) or await client.export_chat_invite_link(chat_id)
                             await app.join_chat(link)
+                            
+                            # Try to start group call after joining
+                            try:
+                                await client.send_message(chat_id, "**🔄 No active group call found. Starting a new group call...**")
+                                await client.create_group_call(chat_id)
+                                await asyncio.sleep(2)  # Wait for group call to initialize
+                            except Exception as call_ex:
+                                pass
+                                
                             await call.play(chat_id, media_stream, config=call_config)
                         except Exception as ex:
                             await aux.edit_text(f"**🚫 Could not start VC:** `{ex}`")
