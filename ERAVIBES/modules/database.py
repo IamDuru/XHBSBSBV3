@@ -9,7 +9,7 @@ except:
     logs(__name__).info("⚠️ 'MONGO_URL' - is not valid❗")
     sys.exit()
 
-mongodb = adb_cli.ERAVIBES
+mongodb = adb_cli[console.DATABASE_NAME]
     
 
 assistantdb = mongodb.assistants
@@ -183,6 +183,7 @@ async def set_admins_only(chat_id: int, value: bool) -> bool:
         upsert=True
     )
     return bool(value)
+
 
 
 
