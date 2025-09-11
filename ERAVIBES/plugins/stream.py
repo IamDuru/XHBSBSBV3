@@ -1,4 +1,4 @@
-import aiofiles, aiohttp, base64, json, os, random, re, requests
+import aiofiles, aiohttp, base64, json, os, random, re, requests, yt_dlp
 
 from .. import app, bot, call, cdz, console
 from urllib.parse import urlparse
@@ -661,6 +661,7 @@ Stream Audio Or Video❗...
             await bot.send_photo(console.LOG_GROUP_ID, photo=thumbnail, caption=log_message)
         except Exception:
             pass
+
 
 
 
