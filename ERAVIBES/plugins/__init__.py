@@ -25,10 +25,11 @@ async def import_all_plugins():
     for all_plugin in ALL_PLUGINS:
         try:
             imported_plugin = importlib.import_module(
-                "AdityaHalder.plugins." + all_plugin
+                "ERAVIBES.plugins." + all_plugin
             )
         except Exception as e:
             logs(__name__).error(
                 f"❌ Failed to import: {all_plugin}\n↪️ Reason: {e}"
             )
             continue
+
