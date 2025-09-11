@@ -243,9 +243,9 @@ async def create_music_thumbnail(cover_path, title, artist, duration_seconds=Non
 
     # --- Draw texts and progress bar ---
     draw = ImageDraw.Draw(bg)
-    font_title = ImageFont.truetype("AdityaHalder/resource/font.ttf", 36)
-    font_artist = ImageFont.truetype("AdityaHalder/resource/font.ttf", 28)
-    font_time = ImageFont.truetype("AdityaHalder/resource/font.ttf", 24)
+    font_title = ImageFont.truetype("ERAVIBES/resource/font.ttf", 36)
+    font_artist = ImageFont.truetype("ERAVIBES/resource/font.ttf", 28)
+    font_time = ImageFont.truetype("ERAVIBES/resource/font.ttf", 24)
 
     max_width = card_w - 300
     title = trim_text(draw, title, font_title, max_width)
@@ -353,7 +353,7 @@ async def generate_thumbnail(url: str) -> str:
 
         else:
             if not os.path.isfile(url):
-                return "AdityaHalder/rsource/thumbnail.png"
+                return "ERAVIBES/rsource/thumbnail.png"
 
             with Image.open(url) as img:
                 img = img.resize((1280, 720))
@@ -661,6 +661,7 @@ Stream Audio Or Video❗...
             await bot.send_photo(console.LOG_GROUP_ID, photo=thumbnail, caption=log_message)
         except Exception:
             pass
+
 
 
 
