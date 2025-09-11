@@ -9,13 +9,13 @@ except:
     logs(__name__).info("⚠️ 'MONGO_URL' - is not valid❗")
     sys.exit()
 
-adb = adb_cli[console.DATABASE_NAME]
+mongodb = adb_cli.ERAVIBES
     
 
-assistantdb = adb.assistants
-adminsdb = adb.admins
-chatsdb = adb.tgchats
-usersdb = adb.tgusers
+assistantdb = mongodb.assistants
+adminsdb = mongodb.admins
+chatsdb = mongodb.chats
+usersdb = mongodb.tgusersdb
 
 
 assistantdict = {}
@@ -183,5 +183,6 @@ async def set_admins_only(chat_id: int, value: bool) -> bool:
         upsert=True
     )
     return bool(value)
+
 
 
