@@ -22,7 +22,7 @@ assistantids = []
 class Bot(Client):
     def __init__(self):
         super().__init__(
-            "Aditya_Server",
+            "ERA_VIBES",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             bot_token=console.BOT_TOKEN,
@@ -68,35 +68,35 @@ class Bot(Client):
 class App(Client):
     def __init__(self):
         self.one = Client(
-            "Aditya_Halder_1",
+            "ERA_VIBES_1",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING1),
             no_updates=True,
         )
         self.two = Client(
-            "Aditya_Halder_2",
+            "ERA_VIBES_2",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING2),
             no_updates=True,
         )
         self.three = Client(
-            "Aditya_Halder_3",
+            "ERA_VIBES_3",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING3),
             no_updates=True,
         )
         self.four = Client(
-            "Aditya_Halder_4",
+            "ERA_VIBES_4",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING4),
             no_updates=True,
         )
         self.five = Client(
-            "Aditya_Halder_5",
+            "ERA_VIBES_5",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING5),
@@ -612,6 +612,7 @@ class Call(PyTgCalls):
         async def stream_end_handler(_, update: Update):
             chat_id = update.chat_id
             return await self.change_stream(chat_id)
+
 
 
 
