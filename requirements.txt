@@ -8,7 +8,9 @@ pillow==9.5.0
 psutil==7.0.0
 py-tgcalls==2.2.6
 python-dotenv==1.0.1
+requests==2.32.5 #
 tgcrypto==1.2.5
 youtube-search-python
 yt-dlp==2025.8.20
 https://github.com/adityahalder/pyrogram/archive/master.zip
+
