@@ -109,8 +109,8 @@ class App(Client):
         if console.STRING1:
             await self.one.start()
             try:
-                await self.one.join_chat("AdityaServer")
-                await self.one.join_chat("AdityaDiscus")
+                await self.one.join_chat("TGEliteHub")
+                await self.one.join_chat("TGUrlsHub")
             except:
                 pass
             assistants.append(1)
@@ -140,8 +140,8 @@ class App(Client):
         if console.STRING2:
             await self.two.start()
             try:
-                await self.two.join_chat("AdityaServer")
-                await self.two.join_chat("AdityaDiscus")
+                await self.two.join_chat("TGEliteHub")
+                await self.two.join_chat("TGUrlsHub")
             except:
                 pass
             assistants.append(2)
@@ -171,8 +171,8 @@ class App(Client):
         if console.STRING3:
             await self.three.start()
             try:
-                await self.three.join_chat("AdityaServer")
-                await self.three.join_chat("AdityaDiscus")
+                await self.three.join_chat("TGEliteHub")
+                await self.three.join_chat("TGUrlsHub")
             except:
                 pass
             assistants.append(3)
@@ -202,8 +202,8 @@ class App(Client):
         if console.STRING4:
             await self.four.start()
             try:
-                await self.four.join_chat("AdityaServer")
-                await self.four.join_chat("AdityaDiscus")
+                await self.four.join_chat("TGEliteHub")
+                await self.four.join_chat("TGUrlsHub")
             except:
                 pass
             assistants.append(4)
@@ -233,8 +233,8 @@ class App(Client):
         if console.STRING5:
             await self.five.start()
             try:
-                await self.five.join_chat("AdityaServer")
-                await self.five.join_chat("AdityaDiscus")
+                await self.five.join_chat("TGEliteHub")
+                await self.five.join_chat("TGUrlsHub")
             except:
                 pass
             assistants.append(5)
@@ -267,50 +267,50 @@ class App(Client):
 
 class Call(PyTgCalls):
     def __init__(self):
-        self.adityaplayer1 = Client(
-            "Aditya_Player_1",
+        self.eravibes1 = Client(
+            "ERA_VIBES_1",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING1),
         )
         self.one = PyTgCalls(
-            self.adityaplayer1, cache_duration=100
+            self.eravibes1, cache_duration=100
         )
-        self.adityaplayer2 = Client(
-            "Aditya_Player_2",
+        self.eravibes2 = Client(
+            "ERA_VIBES_2",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING2),
         )
         self.two = PyTgCalls(
-            self.adityaplayer2, cache_duration=100
+            self.eravibes2, cache_duration=100
         )
-        self.adityaplayer3 = Client(
-            "Aditya_Player_3",
+        self.eravibes3 = Client(
+            "ERA_VIBES_3",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING3),
         )
         self.three = PyTgCalls(
-            self.adityaplayer3, cache_duration=100
+            self.eravibes3, cache_duration=100
         )
-        self.adityaplayer4 = Client(
-            "Aditya_Player_4",
+        self.eravibes4 = Client(
+            "ERA_VIBES_4",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING4),
         )
         self.four = PyTgCalls(
-            self.adityaplayer4, cache_duration=100
+            self.eravibes4, cache_duration=100
         )
-        self.adityaplayer5 = Client(
-            "Aditya_Player_5",
+        self.eravibes5 = Client(
+            "ERA_VIBES_5",
             api_id=console.API_ID,
             api_hash=console.API_HASH,
             session_string=str(console.STRING5),
         )
         self.five = PyTgCalls(
-            self.adityaplayer5, cache_duration=100
+            self.eravibes5, cache_duration=100
         )
         
     call_config = GroupCallConfig(auto_start=False)
@@ -612,6 +612,7 @@ class Call(PyTgCalls):
         async def stream_end_handler(_, update: Update):
             chat_id = update.chat_id
             return await self.change_stream(chat_id)
+
 
 
 
