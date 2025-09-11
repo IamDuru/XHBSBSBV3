@@ -56,21 +56,21 @@ STRING3 = getenv("STRING_SESSION3", None)
 STRING4 = getenv("STRING_SESSION4", None)
 STRING5 = getenv("STRING_SESSION5", None)
 
-DATABASE_NAME = getenv("DATABASE_NAME", "adityaplayer")
+DATABASE_NAME = getenv("DATABASE_NAME", "ERAVIBES")
 DURATION_LIMIT = int(getenv("DURATION_LIMIT", "60"))
-START_IMAGE_URL = getenv("START_IMAGE_URL", "https://graph.org/file/918101d0ad6b1207e6201.png")
+START_IMAGE_URL = getenv("START_IMAGE_URL", "https://envs.sh/nAT.jpg")
 
 
 
 
 
 async def sudo_users():
-    from .modules.database import adb
+    from .modules.database import mongodb
     global sudoers
     if OWNER_ID != 0:
         if OWNER_ID not in sudoers:
             sudoers.add(OWNER_ID)
-    sudoersdb = adb.sudoers
+    sudoersdb = mongodb.sudoers
     sudousers = await sudoersdb.find_one({"sudo": "sudo"})
     sudousers = [] if not sudousers else sudousers["sudoers"]
     if OWNER_ID != 0:
@@ -86,5 +86,6 @@ async def sudo_users():
             if user_id not in sudoers:
                 sudoers.add(user_id)
     logs(__name__).info(f"✅ All Sudo Users Loaded.")
+
 
 
