@@ -367,7 +367,7 @@ async def generate_thumbnail(url: str) -> str:
         return filename
 
     except Exception:
-        return "AdityaHalder/rsource/thumbnail.png"
+        return "ERAVIBES/rsource/thumbnail.png"
 
 
 async def make_thumbnail(image, title, channel, duration, output):
@@ -453,7 +453,7 @@ async def start_stream_in_vc(client, message):
         title = full_title[:30]
         duration_mins = format_duration(duration_sec)
         views = "None"
-        image_path = "AdityaHalder/resource/thumbnail.png"
+        image_path = "ERAVIBES/resource/thumbnail.png"
         channellink = (
             f"https://t.me/{message.chat.username}"
             if message.chat.username
@@ -661,6 +661,7 @@ Stream Audio Or Video❗...
             await bot.send_photo(console.LOG_GROUP_ID, photo=thumbnail, caption=log_message)
         except Exception:
             pass
+
 
 
 
