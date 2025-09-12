@@ -28,7 +28,7 @@
     },
     "MONGO_URL": {
       "description": "Get a mongodb url from https://cloud.mongodb.com.",
-      "value": "",
+      "value": "mongodb+srv://Hello:Hello@cluster0.pi9ks.mongodb.net/?retryWrites=true&w=majority",
       "required": true
     },
     "OWNER_ID": {
@@ -58,7 +58,7 @@
     },
     "UPSTREAM_BRANCH": {
       "description": "Upstream Repo's Branch Name",
-      "value": "m3",
+      "value": "m4",
       "required": true
     }
   },
