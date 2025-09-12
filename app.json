@@ -48,7 +48,7 @@
     },
     "START_IMAGE_URL": {
       "description": "Bot Start image link",
-      "value": "https://files.catbox.moe/t5gy4y.jpg",
+      "value": "hhttps://envs.sh/nAT.jpg",
       "required": true
     },
     "UPSTREAM_REPO": {
