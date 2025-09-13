@@ -498,7 +498,7 @@ Stream Audio Or Video❗...
         image_file, full_title, channel, duration_sec, f"cache/{chat_id}_{id}_{message.id}.png"
     )'''
     thumbnail = await make_thumbnail(
-        video_id, full_title, channel, duration_sec, views, message
+        full_title, channel, duration_sec, views, message
     )
         
     try:
@@ -583,6 +583,7 @@ Stream Audio Or Video❗...
             await bot.send_photo(console.LOG_GROUP_ID, photo=thumbnail, caption=log_message)
         except Exception:
             pass
+
 
 
 
