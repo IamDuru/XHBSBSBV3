@@ -332,7 +332,7 @@ Stream Audio Or Video❗...
         ]
     )
     try:
-        await message.reply_photo(photo=thumbnail, caption=caption, has_spoiler=True, reply_markup=buttons)
+        await message.reply_photo(photo=thumbnail, caption=caption, has_spoiler=F, reply_markup=buttons)
     except Exception as e:
         pass
 
@@ -372,17 +372,22 @@ Stream Audio Or Video❗...
             stream_type = "Audio" if not video_stream else "Video"
 
             log_message = f"""
-🎉 **{mention} Just Played A Song.**
+**❖ {mention} ɪꜱ ᴘʟᴀʏ ʟᴏɢ ❖**
 
-📍 **Chat:** {chat_name}
-💬 **Chat Link:** {chat_link}
-♂️ **Chat ID:** {chat_id}
-👤 **Requested By:** {req_user}
-🆔 **User ID:** `{user_id}`
-🔎 **Query:** {query}
-🎶 **Title:** [{title}...]({link})
-⏱️ **Duration:** {duration_mins}
-📡 **Stream Type:** {stream_type}"""
-            await bot.send_photo(console.LOG_GROUP_ID, photo=thumbnail, caption=log_message)
+**● ᴄʜᴀᴛ ɪᴅ ➥** `{chat_id}`
+**● ᴄʜᴀᴛ ɴᴀᴍᴇ ➥** {chat_name}
+**● ᴄʜᴀᴛ ʟɪɴᴋ ➥** [ᴏᴘᴇɴ]({chat_link})
+
+**● ᴜsᴇʀ ɪᴅ ➥** `{user_id}`
+**● ɴᴀᴍᴇ ➥** {req_user}
+**● ᴜsᴇʀɴᴀᴍᴇ ➥** @{req_user_username}
+
+**● ǫᴜᴇʀʏ ➥** {query}
+**● ᴛɪᴛʟᴇ ➥** [{title}]({link})
+**● ᴅᴜʀᴀᴛɪᴏɴ ➥** {duration_mins}
+**● sᴛʀᴇᴀᴍᴛʏᴘᴇ ➥** {stream_type}
+"""
+            await bot.send_photo(console.LOG_GROUP_ID, caption=log_message)
         except Exception:
             pass
+
