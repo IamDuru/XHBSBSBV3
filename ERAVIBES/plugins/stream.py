@@ -282,12 +282,12 @@ async def create_thumbnail(results, user_id):
         LOGGER.info(f"Thumbnail Error: {e}")
         return START_IMAGE_URL
 
-async def make_thumbnail(image, title, channel, duration, output):
+async def make_thumbnail(image, title, channel, duration, views, output):
     results = {
         "title": title,
         "id": image,
         "duration": duration,
-        "views": "10K views",   # Default if not available
+        "views": views,
         "channel": channel
     }
     user_id = message.from_user.id
@@ -494,9 +494,12 @@ Stream Audio Or Video❗...
             except Exception:
                 return
 
-    #image_file = await generate_thumbnail(image_path)
-    thumbnail = await make_thumbnail(
+
+    '''thumbnail = await make_thumbnail(
         image_file, full_title, channel, duration_sec, f"cache/{chat_id}_{id}_{message.id}.png"
+    )'''
+    thumbnail = await make_thumbnail(
+        vidid=id, title=full_title, channel=channel, duration=duration, views=views, user_id=message.from_user.id
     )
         
     try:
@@ -581,6 +584,7 @@ Stream Audio Or Video❗...
             await bot.send_photo(console.LOG_GROUP_ID, photo=thumbnail, caption=log_message)
         except Exception:
             pass
+
 
 
 
